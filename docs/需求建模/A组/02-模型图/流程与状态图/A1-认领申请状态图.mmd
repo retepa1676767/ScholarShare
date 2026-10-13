@@ -1,0 +1,14 @@
+stateDiagram-v2
+    [*] --> submitted: UC02保存申请编号与材料引用
+    submitted --> verifying: 进入核验队列
+    submitted --> cancelled: 申请人取消
+    verifying --> cancelled: 申请人取消且尚未终局处理
+    verifying --> approved: UC03审核通过并授目标门户权限
+    verifying --> rejected: UC03驳回并记录理由
+    approved --> disputed: 批准后出现身份争议，撤销错误关联
+    rejected --> submitted: 申请人补证重提（新处理轮次）
+    cancelled --> [*]
+    note right of disputed
+      B1 SRS未定义争议解决后的恢复状态；
+      不自行增加“自动恢复权限”转移。
+    end note

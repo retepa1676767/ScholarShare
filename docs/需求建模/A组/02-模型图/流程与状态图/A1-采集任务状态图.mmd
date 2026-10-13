@@ -1,0 +1,20 @@
+stateDiagram-v2
+    [*] --> queued: 创建合法任务
+    queued --> running: 管理员启动/调度启动
+    running --> succeeded: 全批次完成且满足成功口径
+    running --> failed: 源站/解析/写入失败
+    running --> stopped: 管理员停止
+    failed --> retrying: 重试次数未满3且允许重试
+    retrying --> running: 退避结束，幂等续跑
+    retrying --> stopped: 管理员停止
+    failed --> [*]: 放弃或达到上限
+    succeeded --> [*]
+    stopped --> [*]
+    note right of failed
+      失败须留错误、已处理数和批次；
+      不得显示为“查询明确零结果”。
+    end note
+    note right of succeeded
+      合法查询返回0条可成功，
+      但只说明本次条件下零结果。
+    end note

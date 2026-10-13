@@ -1,0 +1,21 @@
+flowchart TD
+    start((开始)) --> locate[申请人定位目标学者门户]
+    locate --> submit[填写身份信息和佐证并提交]
+    submit --> valid{必填、格式、重复申请校验通过?}
+    valid -- 否 --> fix[返回具体错误或既有申请编号]
+    fix --> submit
+    valid -- 是 --> recorded[保存申请编号与提交快照<br/>状态 submitted]
+    recorded --> verify[平台/授权人员核验证据<br/>状态 verifying]
+    verify --> sufficient{证据足够且目标门户归属可判定?}
+    sufficient -- 否 --> reject[管理员记录驳回理由<br/>状态 rejected]
+    sufficient -- 是 --> conflict{已有管理人或并发争议?}
+    conflict -- 是 --> hold[暂停直接通过并转争议核验<br/>不得覆盖现有管理人]
+    hold --> reject
+    conflict -- 否 --> decision[有权限管理员审核申请与版本]
+    decision --> approved{批准?}
+    approved -- 否 --> reject
+    approved -- 是 --> grant[原子记录 approved 与目标门户管理权限<br/>保存审核人、时间、依据和日志]
+    reject --> notify[通知申请人可见结果<br/>允许按 B1 SRS 补证重提]
+    grant --> notify2[通知申请人并允许管理目标门户]
+    notify --> end1((结束))
+    notify2 --> end2((结束))
